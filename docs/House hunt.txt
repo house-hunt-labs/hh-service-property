@@ -1,0 +1,120 @@
+House Hunt
+I want a geo map rating of each flats
+Criteria of ranking for me 
+Square fit and type (1100sqft 2 BHK)
+House type - gated, semi gated, high raise, standalone, single
+Monthly rent and deposit
+External charges - Maintenance charge - If maintenance change then why cut money from deposit
+Water bill
+Electricity bill
+Electricity backup
+Garbage fee
+Parking 
+Nearby market or places
+Gym
+Grocery and vegetable shop
+Bike washing
+Chai sutta
+Good snacks point
+Current tenants - choose environment wisely
+No old fuckers
+No nuisance makers
+No too much kids
+Other amenities
+Pool
+Garden 
+Play area
+
+Feature 1: Rating machine
+A system to calculate and rate on the basis of the above filled data.
+For now create a benchmark set based on static values. 
+In future scope we can get the real time data for sqft/rate and other metrics for that specific area.
+SDLC: Agile just build
+Tech stack:
+
+Ideas:
+Get google ratings for locations
+Rental property
+Gyms
+Shops
+Salons
+Etc
+
+🏗️ House Hunt: Technical Design Document (v1.0)
+1. System Architecture Overview
+To achieve the "Worth It" engine, we will use a Microservices Architecture. This allows your ML/Valuation engine (Python) to live separately from your high-performance Property API (Go).
+The Core Services (Separation of Duty)
+API Gateway (Kong or Nginx): The single entry point. Handles rate limiting, SSL termination, and routing.
+Valuation Service (The "Brain"): * Tech: Python (FastAPI).
+Duty: Runs ML models to calculate "Worth Score." Fetches air quality, crime rates, and historical price trends.
+Property Service (The "Catalog"):
+Tech: Go (Golang).
+Duty: Manages property listings, metadata, and CRUD operations.
+Geo-Spatial Service:
+Tech: Go + PostGIS.
+Duty: Handles "Properties near me," radius searches, and GMap integration logic.
+Review & Feedback Service:
+Tech: Node.js (TypeScript).
+Duty: Manages user reviews for properties and landlords. Performs sentiment analysis on feedback.
+User Service:
+Tech: Go.
+Duty: Auth (JWT), user preferences, and saved "Watchlists."
+
+2. Communication Patterns
+External (Frontend to Backend)
+Protocol: RESTful APIs or GraphQL.
+Integration: The Frontend (Next.js) calls the API Gateway, which routes the request to the specific service.
+Internal (Service to Service)
+Synchronous (Request/Response): Use gRPC.
+Example: The Property Service needs a "Worth Score" immediately to show on a listing. It calls the Valuation Service via gRPC for near-instant communication.
+Asynchronous (Event-Driven): Use RabbitMQ or Apache Kafka.
+Example: When a user leaves a "Bad Landlord" review, an event is published. The Valuation Service listens to this and automatically lowers that property's "Worth Score" in the background.
+
+3. The Data Flow (Flow Chart)
+graph TD
+    A[User/Frontend] -->|Search Query| B(API Gateway)
+    B --> C{Load Balancer}
+    C --> D[Property Service]
+    D --> E[(PostgreSQL)]
+    
+    %% Async Logic
+    D -->|New Property Added| F[Message Broker: Kafka]
+    F --> G[Valuation Service]
+    G -->|Calculate Score| H[ML Model/Python]
+    H -->|Update Score| D
+    
+    %% Geo Logic
+    B --> I[Geo-Spatial Service]
+    I -->|Distance Calculations| J[(PostGIS)]
+
+4. Code Management: The "Polyrepo" Strategy
+Since you want to learn current industry standards and maintain separation, I recommend a Polyrepo setup (one repository per microservice).
+How to structure your GitHub Organization:
+Create a GitHub Organization (e.g., house-hunt-labs) and create these repos:
+hh-api-gateway: Configuration and deployment scripts for the gateway.
+hh-service-valuation: The Python/ML codebase.
+hh-service-property: The Go/Core codebase.
+hh-web-main: The Next.js frontend.
+hh-infra: Docker Compose files, Kubernetes manifests, and CI/CD (GitHub Actions) workflows.
+Why this? * Independent Scaling: You can update the Valuation engine without touching the Property UI.
+Different Languages: Python devs (ML) don't need to see Go code.
+Clearer Logs: CI/CD pipelines run only for the service you changed.
+
+5. Integration with Frontend
+To ensure a "Modern & Clean UI" that is easily remodeled:
+BFF Pattern (Backend for Frontend): Your Next.js app should have its own /api route that aggregates data from multiple microservices and returns a single clean JSON to the UI.
+Shared Design System: Use Shadcn/UI.
+Create a components/ folder.
+If you decide to change the "Look" in Phase 2, you only change the CSS variables in your globals.css. The logic stays in the microservices.
+
+6. Implementation Roadmap (Step-by-Step)
+Step 1: The Foundation
+Setup hh-infra with a Docker Compose file containing PostgreSQL and RabbitMQ.
+Build the User Service and Property Service in Go.
+Step 2: The Logic
+Build the Valuation Service in Python.
+Implement the $Worth Score$ formula:
+$$Score = (MarketRatio \times 0.5) + (AmenityWeight \times 0.3) + (FeedbackSentiment \times 0.2)$$
+Step 3: The UI
+Build the Next.js frontend.
+Connect to the API Gateway to display properties and their "Worth Scores."

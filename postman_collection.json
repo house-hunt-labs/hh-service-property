@@ -1,0 +1,336 @@
+{
+  "info": {
+    "_postman_id": "hh-service-property",
+    "name": "House Hunt Property Service",
+    "description": "Complete API for House Hunt Property Service with Landlords, Properties, and Valuation Metrics",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Landlords",
+      "item": [
+        {
+          "name": "Create Landlord",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aditi Sharma\",\n  \"overall_rating\": 4.5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/landlords",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "landlords"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Landlords",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/landlords",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "landlords"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Landlord",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/landlords/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "landlords",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Landlord",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aditi Sharma Updated\",\n  \"overall_rating\": 4.8\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/landlords/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "landlords",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Landlord",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/landlords/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "landlords",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "Create Property",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"landlord_id\": 1,\n  \"title\": \"Luxury 2BHK near Sony World Signal\",\n  \"price_monthly\": 45000,\n  \"area_sqft\": 1200,\n  \"type\": \"2 BHK\",\n  \"house_type\": \"gated\",\n  \"square_feet\": 1200,\n  \"deposit\": 90000,\n  \"maintenance_charge\": 500,\n  \"water_bill\": 2000,\n  \"electricity_bill\": 3000,\n  \"electricity_backup\": true,\n  \"garbage_fee\": 100,\n  \"parking\": true,\n  \"nearby_market\": true,\n  \"gym\": true,\n  \"grocery_shop\": true,\n  \"bike_washing\": true,\n  \"chai_sutta\": false,\n  \"snacks_point\": true,\n  \"current_tenants\": \"Young professionals\",\n  \"amenities\": [\"pool\", \"garden\", \"play_area\"],\n  \"coordinates\": {\"type\": \"Point\", \"coordinates\": [77.6245, 12.9339]}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Property",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/properties/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "properties",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Property",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price_monthly\": 47000,\n  \"maintenance_charge\": 600,\n  \"gym\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/properties/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "properties",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Property",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/properties/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "properties",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Valuation Metrics",
+      "item": [
+        {
+          "name": "Create Valuation Metrics",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"property_id\": 1,\n  \"worth_score\": 82.50,\n  \"market_avg_price\": 48000.00,\n  \"amenity_score\": 8.5,\n  \"commute_index\": 9.0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/metrics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "metrics"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/metrics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "metrics"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Metrics for Property",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/metrics/property/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "metrics",
+                "property",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Metrics",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"worth_score\": 85.00,\n  \"amenity_score\": 9.0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/metrics/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "metrics",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Metrics",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/metrics/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "metrics",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080/api/v1",
+      "type": "string"
+    }
+  ]
+}
