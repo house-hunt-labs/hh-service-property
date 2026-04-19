@@ -1,31 +1,53 @@
 package config
 
 import (
-	"log"
-	"os"
+    "context"
+    "log"
+    "os"
 
-	"github.com/joho/godotenv"
+    "github.com/joho/godotenv"
+    "go.mongodb.org/mongo-driver/mongo"
+    "go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Config struct {
-	Port        string
-	DatabaseURL string
+    MongoClient *mongo.Client
+    Database    *mongo.Database
 }
 
-func Load() *Config {
-	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found")
-	}
+func LoadConfig() (*Config, error) {
+    err := godotenv.Load()
+    if err != nil {
+        log.Println("No .env file found, using system env")
+    }
 
-	return &Config{
-		Port:        getEnv("PORT", "8080"),
-		DatabaseURL: getEnv("DATABASE_URL", "postgres://user:password@localhost/propertydb?sslmode=disable"),
-	}
-}
+    mongoURI := os.Getenv("MONGO_URI")
+    if mongoURI == "" {
+        mongoURI = "mongodb://localhost:27017"
+    }
 
-func getEnv(key, defaultValue string) string {
-	if value := os.Getenv(key); value != "" {
-		return value
-	}
-	return defaultValue
+    dbName := os.Getenv("DB_NAME")
+    if dbName == "" {
+        dbName = "house_hunt"
+    }
+
+    clientOptions := options.Client().ApplyURI(mongoURI)
+    client, err := mongo.Connect(context.TODO(), clientOptions)
+    if err != nil {
+        return nil, err
+    }
+
+    err = client.Ping(context.TODO(), nil)
+    if err != nil {
+        return nil, err
+    }
+
+    log.Println("Connected to MongoDB")
+
+    db := client.Database(dbName)
+
+    return &Config{
+        MongoClient: client,
+        Database:    db,
+    }, nil
 }

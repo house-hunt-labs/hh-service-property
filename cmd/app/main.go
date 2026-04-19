@@ -1,32 +1,30 @@
 package main
 
 import (
-	"log"
-	"net/http"
+    "log"
 
-	"github.com/gin-gonic/gin"
-	"github.com/house-hunt-labs/hh-service-property/config"
-	"github.com/house-hunt-labs/hh-service-property/database"
-	"github.com/house-hunt-labs/hh-service-property/api/v1"
+    "github.com/gin-gonic/gin"
+    "github.com/house-hunt-labs/hh-service-property/config"
+    "github.com/house-hunt-labs/hh-service-property/internal/routes"
 )
 
 func main() {
-	// Load configuration
-	cfg := config.Load()
+    cfg, err := config.LoadConfig()
+    if err != nil {
+        log.Fatal("Failed to load config:", err)
+    }
 
-	// Initialize database
-	db := database.InitDB(cfg.DatabaseURL)
-	defer db.Close()
+    defer func() {
+        if err := cfg.MongoClient.Disconnect(nil); err != nil {
+            log.Fatal("Failed to disconnect MongoDB:", err)
+        }
+    }()
 
-	// Initialize Gin router
-	r := gin.Default()
+    r := gin.Default()
+    routes.SetupRoutes(r, cfg.Database)
 
-	// Setup routes
-	v1.SetupRoutes(r, db)
-
-	// Start server
-	log.Printf("Starting server on port %s", cfg.Port)
-	if err := http.ListenAndServe(":"+cfg.Port, r); err != nil {
-		log.Fatal("Failed to start server:", err)
-	}
+    log.Println("Server starting on :8080")
+    if err := r.Run(":8080"); err != nil {
+        log.Fatal("Failed to start server:", err)
+    }
 }
